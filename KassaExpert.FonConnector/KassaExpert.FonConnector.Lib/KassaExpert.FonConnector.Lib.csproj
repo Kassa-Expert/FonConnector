@@ -1,7 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Company>Kassa.Expert</Company>
+    <Product>KassaExpert.FonConnector</Product>
+    <Description>Lt. Dokumentation Version 5 ab 20.12.2016</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Kassa-Expert</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Kassa-Expert/FonConnector</RepositoryUrl>
+    <Authors>Mauracher Simon, Faustmann Christian</Authors>
+    <PackageId>KassaExpert.FonConnector</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.5.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,4 +25,10 @@
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
