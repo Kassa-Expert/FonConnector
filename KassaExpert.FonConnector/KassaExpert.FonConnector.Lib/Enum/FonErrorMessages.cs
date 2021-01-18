@@ -1,7 +1,7 @@
 ﻿using Enum.Ext;
 using System.Linq;
 
-namespace KassaExpert.FonConnector.Lib.ErrorMessages
+namespace KassaExpert.FonConnector.Lib.Enum
 {
     /// <summary>
     /// to check the response code given here: https://www.bmf.gv.at/dam/jcr:19c193f4-99cd-42ff-9b23-655f2ab5734e/BMF_Registrierkassen_Webservice.pdf

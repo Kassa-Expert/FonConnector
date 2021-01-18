@@ -12,6 +12,7 @@
     <PackageId>KassaExpert.FonConnector</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.5.0.0</Version>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -32,5 +33,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="KassaExpert.FonConnector.LibTest" />
+    <!-- [assembly: InternalsVisibleTo("CustomTest1")] -->
   </ItemGroup>
 </Project>

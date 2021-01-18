@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using KassaExpert.FonConnector.Lib.ErrorMessages;
+using KassaExpert.FonConnector.Lib.Enum;
 using NUnit.Framework;
 using System;
 using System.Linq;
