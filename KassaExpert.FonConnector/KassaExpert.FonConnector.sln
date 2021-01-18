@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KassaExpert.FonConnector.Lib", "KassaExpert.FonConnector.Lib\KassaExpert.FonConnector.Lib.csproj", "{B5388F8E-D80D-4A59-8122-95EA5812A7C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KassaExpert.FonConnector.Lib", "KassaExpert.FonConnector.Lib\KassaExpert.FonConnector.Lib.csproj", "{B5388F8E-D80D-4A59-8122-95EA5812A7C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KassaExpert.FonConnector.LibTest", "KassaExpert.FonConnector.LibTest\KassaExpert.FonConnector.LibTest.csproj", "{C73117F1-75DB-4B33-8508-36CBAA736743}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B5388F8E-D80D-4A59-8122-95EA5812A7C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5388F8E-D80D-4A59-8122-95EA5812A7C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5388F8E-D80D-4A59-8122-95EA5812A7C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C73117F1-75DB-4B33-8508-36CBAA736743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C73117F1-75DB-4B33-8508-36CBAA736743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C73117F1-75DB-4B33-8508-36CBAA736743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C73117F1-75DB-4B33-8508-36CBAA736743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
