@@ -7,18 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KassaExpert.FonConnector.Api
+namespace KassaExpert.FonConnector.Lib.RegKassaService
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="https://finanzonline.bmf.gv.at/rkdb", ConfigurationName="KassaExpert.FonConnector.Api.rkdbServicePort")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="https://finanzonline.bmf.gv.at/rkdb", ConfigurationName="KassaExpert.FonConnector.Lib.RegKassaService.rkdbServicePort")]
     internal interface rkdbServicePort
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="rkdb", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<KassaExpert.FonConnector.Api.rkdbResponse1> rkdbAsync(KassaExpert.FonConnector.Api.rkdbRequest1 request);
+        System.Threading.Tasks.Task<KassaExpert.FonConnector.Lib.RegKassaService.rkdbResponse1> rkdbAsync(KassaExpert.FonConnector.Lib.RegKassaService.rkdbRequest1 request);
     }
     
     /// <remarks/>
@@ -2147,13 +2147,13 @@ namespace KassaExpert.FonConnector.Api
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://finanzonline.bmf.gv.at/rkdb", Order=0)]
-        public KassaExpert.FonConnector.Api.rkdbRequest rkdbRequest;
+        public KassaExpert.FonConnector.Lib.RegKassaService.rkdbRequest rkdbRequest;
         
         public rkdbRequest1()
         {
         }
         
-        public rkdbRequest1(KassaExpert.FonConnector.Api.rkdbRequest rkdbRequest)
+        public rkdbRequest1(KassaExpert.FonConnector.Lib.RegKassaService.rkdbRequest rkdbRequest)
         {
             this.rkdbRequest = rkdbRequest;
         }
@@ -2166,26 +2166,26 @@ namespace KassaExpert.FonConnector.Api
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://finanzonline.bmf.gv.at/rkdb", Order=0)]
-        public KassaExpert.FonConnector.Api.rkdbResponse rkdbResponse;
+        public KassaExpert.FonConnector.Lib.RegKassaService.rkdbResponse rkdbResponse;
         
         public rkdbResponse1()
         {
         }
         
-        public rkdbResponse1(KassaExpert.FonConnector.Api.rkdbResponse rkdbResponse)
+        public rkdbResponse1(KassaExpert.FonConnector.Lib.RegKassaService.rkdbResponse rkdbResponse)
         {
             this.rkdbResponse = rkdbResponse;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    internal interface rkdbServicePortChannel : KassaExpert.FonConnector.Api.rkdbServicePort, System.ServiceModel.IClientChannel
+    internal interface rkdbServicePortChannel : KassaExpert.FonConnector.Lib.RegKassaService.rkdbServicePort, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    internal partial class rkdbServicePortClient : System.ServiceModel.ClientBase<KassaExpert.FonConnector.Api.rkdbServicePort>, KassaExpert.FonConnector.Api.rkdbServicePort
+    internal partial class rkdbServicePortClient : System.ServiceModel.ClientBase<KassaExpert.FonConnector.Lib.RegKassaService.rkdbServicePort>, KassaExpert.FonConnector.Lib.RegKassaService.rkdbServicePort
     {
         
         /// <summary>
@@ -2228,7 +2228,7 @@ namespace KassaExpert.FonConnector.Api
         {
         }
         
-        public System.Threading.Tasks.Task<KassaExpert.FonConnector.Api.rkdbResponse1> rkdbAsync(KassaExpert.FonConnector.Api.rkdbRequest1 request)
+        public System.Threading.Tasks.Task<KassaExpert.FonConnector.Lib.RegKassaService.rkdbResponse1> rkdbAsync(KassaExpert.FonConnector.Lib.RegKassaService.rkdbRequest1 request)
         {
             return base.Channel.rkdbAsync(request);
         }

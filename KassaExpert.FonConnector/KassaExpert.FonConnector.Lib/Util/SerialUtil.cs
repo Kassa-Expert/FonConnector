@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace KassaExpert.FonConnector.Lib.Util
 {
+    /// <summary>
+    /// Serial is the Serial-Number from the signing certificate
+    /// </summary>
     internal static class SerialUtil
     {
         internal static bool IsValidHexSerial(this string hexSerial)
@@ -21,7 +25,7 @@ namespace KassaExpert.FonConnector.Lib.Util
                 return false;
             }
 
-            return true;
+            return Regex.IsMatch(trimmed, @"\A\b[0-9a-fA-F]+\b\Z");
         }
     }
 }
