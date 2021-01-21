@@ -3,7 +3,7 @@
 namespace KassaExpert.FonConnector.Lib.Command
 {
     public sealed class CommandPayloadResult<T> : CommandResult
-        where T : class
+        where T : struct
     {
         public CommandPayloadResult(bool isSuccessful, T? payload, string? errorMessage) : base(isSuccessful, errorMessage)
         {
@@ -16,6 +16,10 @@ namespace KassaExpert.FonConnector.Lib.Command
 
                 Payload = payload;
             }
+        }
+
+        public CommandPayloadResult(CommandResult commandResult, T? payload) : this(commandResult.IsSuccessful, payload, commandResult.ErrorMessage)
+        {
         }
 
         public T? Payload { get; }

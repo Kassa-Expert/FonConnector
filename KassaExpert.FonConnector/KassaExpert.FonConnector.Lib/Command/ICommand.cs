@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
 
 namespace KassaExpert.FonConnector.Lib.Command
 {
@@ -10,12 +8,12 @@ namespace KassaExpert.FonConnector.Lib.Command
         where TDecommissioning : class
         where TRecommissioning : class
     {
-        CommandResult Register(TRegister commandPayload);
+        Task<CommandResult> Register(TRegister commandPayload);
 
-        CommandResult Check(TCheck commandPayload);
+        Task<CommandPayloadResult<bool>> Check(TCheck commandPayload);
 
-        CommandResult Decommission(TDecommissioning commandPayload);
+        Task<CommandResult> Decommission(TDecommissioning commandPayload);
 
-        CommandResult Recommission(TRecommissioning commandPayload);
+        Task<CommandResult> Recommission(TRecommissioning commandPayload);
     }
 }

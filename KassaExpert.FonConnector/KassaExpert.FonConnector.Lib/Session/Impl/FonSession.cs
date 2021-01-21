@@ -1,11 +1,11 @@
 ﻿using KassaExpert.FonConnector.Lib.Command;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using KassaExpert.FonConnector.Lib.Command.Impl;
 using System.Threading.Tasks;
 using KassaExpert.FonConnector.Lib.SessionService;
 using KassaExpert.FonConnector.Lib.Enum;
+using KassaExpert.FonConnector.Lib.Util;
+using KassaExpert.FonConnector.Lib.Exception;
+using KassaExpert.FonConnector.Lib.RegKassaService;
 
 namespace KassaExpert.FonConnector.Lib.Session.Impl
 {
@@ -16,13 +16,42 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
         /// </summary>
         private string? _sessionId;
 
+        private bool _isTestSession = false;
+
         private readonly string _teilnehmerId;
         private readonly string _benutzerId;
         private readonly string _pin;
 
-        internal bool HasSession => _sessionId is not null;
+        public void SetTestSession(bool isTestSession)
+        {
+            _isTestSession = isTestSession;
+        }
 
-        internal string? GetSessionId() => _sessionId;
+        /// <summary>
+        /// used to prevent multiple events from happening at the same time
+        /// </summary>
+        private readonly TaskQueue _taskQueue = new TaskQueue();
+
+        private bool _loginTried = false;
+
+        internal Task<string> GetSessionId()
+        {
+            return _taskQueue.Enqueue(async () =>
+            {
+                if (!_loginTried)
+                {
+                    _loginTried = true;
+                    await Login();
+                }
+
+                if (_sessionId is not null)
+                {
+                    return _sessionId;
+                }
+
+                throw new NoSessionException();
+            });
+        }
 
         public FonSession(string teilnehmerId, string benutzerId, string pin)
         {
@@ -31,6 +60,38 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
             _pin = pin;
 
             SignatureCreationUnitCommand = new Command.Impl.SignatureCreationUnit.CommandImpl(this);
+        }
+
+        internal async Task<(CommandResult CommandResult, result Response)> ExecuteRkdbCommand(object command)
+        {
+            var request = new rkdbRequest1
+            {
+                rkdbRequest = new rkdbRequest
+                {
+                    tid = _teilnehmerId,
+                    benid = _benutzerId,
+                    id = await GetSessionId(),
+                    art_uebermittlung = _isTestSession ? art_uebermittlung.T : art_uebermittlung.P,
+                    erzwinge_asynchron = false,
+                    Item = command
+                }
+            };
+
+            var clt = new rkdbServicePortClient();
+
+            await clt.OpenAsync();
+
+            var response = await clt.rkdbAsync(request);
+
+            await clt.CloseAsync();
+
+            var status = FonRegKassaServiceReturnCodes.GetByFonReturnCode(response.rkdbResponse.result[0].rkdbMessage[0].rc);
+
+            if (!status.Success)
+            {
+                return (new CommandResult(false, status.ErrorMessage), response.rkdbResponse.result[0]);
+            }
+            return (new CommandResult(false, status.ErrorMessage), response.rkdbResponse.result[0]);
         }
 
         internal async Task Login()
@@ -54,9 +115,9 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
 
             var status = FonSessionServiceReturnCodes.GetByFonReturnCode(response.Body.rc);
 
-            if (status != FonSessionServiceReturnCodes.RC_00)
+            if (!status.Success)
             {
-                throw new Exception(status.ErrorMessage);
+                throw new NoSessionException(status.ErrorMessage);
             }
 
             _sessionId = response.Body.id;
@@ -64,6 +125,9 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
 
         internal async Task Logout()
         {
+            if (_sessionId is null)
+                return;
+
             var clt = new sessionServicePortClient();
 
             await clt.OpenAsync();
@@ -82,10 +146,12 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
 
             var status = FonSessionServiceReturnCodes.GetByFonReturnCode(response.Body.rc);
 
-            if (status != FonSessionServiceReturnCodes.RC_00)
+            if (!status.Success)
             {
-                throw new Exception(status.ErrorMessage);
+                throw new SessionException(status.ErrorMessage);
             }
+
+            _sessionId = null;
         }
 
         public ICommand<Command.Impl.SignatureCreationUnit.RegisterPayload, Command.Impl.SignatureCreationUnit.CheckPayload, Command.Impl.SignatureCreationUnit.DecommissioningPayload, Command.Impl.SignatureCreationUnit.RecommissioningPayload> SignatureCreationUnitCommand { get; }
@@ -105,11 +171,8 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
 
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects).
+                Task.Run(async () => await Logout()).Wait();
             }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-            // TODO: set large fields to null.
 
             _disposed = true;
         }

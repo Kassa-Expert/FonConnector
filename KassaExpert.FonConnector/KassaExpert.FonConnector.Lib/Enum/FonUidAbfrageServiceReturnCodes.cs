@@ -1,5 +1,4 @@
 ﻿using Enum.Ext;
-using System.Linq;
 
 namespace KassaExpert.FonConnector.Lib.Enum
 {

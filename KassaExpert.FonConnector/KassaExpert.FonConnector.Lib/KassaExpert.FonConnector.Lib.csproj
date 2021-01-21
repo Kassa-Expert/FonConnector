@@ -37,6 +37,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="KassaExpert.FonConnector.LibTest" />
-    <!-- [assembly: InternalsVisibleTo("CustomTest1")] -->
+    <!-- [assembly: InternalsVisibleTo("KassaExpert.FonConnector.LibTest")] -->
   </ItemGroup>
 </Project>
