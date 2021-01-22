@@ -73,7 +73,12 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
                     id = await GetSessionId(),
                     art_uebermittlung = _isTestSession ? art_uebermittlung.T : art_uebermittlung.P,
                     erzwinge_asynchron = false,
-                    Item = command
+                    Item = new rkdb
+                    {
+                        Items = new object[] { command },
+                        paket_nr = RandomUtil.GetRandomNumberString(),
+                        ts_erstellung = DateUtil.GetAustriaDateNow()
+                    }
                 }
             };
 
@@ -105,7 +110,7 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
                 Body = new loginRequestBody
                 {
                     benid = _benutzerId,
-                    herstellerid = Environment.GetEnvironmentVariable("HERSTELLER_UID", EnvironmentVariableTarget.User),
+                    herstellerid = Environment.GetEnvironmentVariable("HERSTELLER_UID"),
                     pin = _pin,
                     tid = _teilnehmerId
                 }
