@@ -33,7 +33,12 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.SignatureCreationUnit
                 hexSpecified = true,
             };
 
-            var response = await _session.ExecuteRkdbCommand(sicherheitseinrichtung);
+            var response = await _session.ExecutePlainCommand(sicherheitseinrichtung);
+
+            if (!response.CommandResult.IsSuccessful)
+            {
+                return new CommandPayloadResult<bool>(response.CommandResult, false);
+            }
 
             return new CommandPayloadResult<bool>(response.CommandResult, response.Response.abfrage_ergebnis?.status == abfrage_ergebnisStatus.IN_BETRIEB);
         }
@@ -58,25 +63,17 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.SignatureCreationUnit
 
             if (commandPayload.Type.IsReversible)
             {
-                sicherheitseinrichtung.Item = new ausfall_se
+                sicherheitseinrichtung.Item = new ausfall
                 {
-                    zertifikatsseriennummer = sicherheitseinrichtung.zertifikatsseriennummer,
-                    Item = new ausfall
-                    {
-                        beginn_ausfall = DateUtil.GetAustriaDateNow(),
-                        begruendung = commandPayload.Type.Id
-                    }
+                    beginn_ausfall = DateUtil.GetAustriaDateNow(),
+                    begruendung = commandPayload.Type.Id
                 };
             }
             else
             {
-                sicherheitseinrichtung.Item = new ausfall_se
+                sicherheitseinrichtung.Item = new ausserbetriebnahme
                 {
-                    zertifikatsseriennummer = sicherheitseinrichtung.zertifikatsseriennummer,
-                    Item = new ausserbetriebnahme
-                    {
-                        begruendung = commandPayload.Type.Id
-                    }
+                    begruendung = commandPayload.Type.Id
                 };
             }
 

@@ -41,5 +41,59 @@ namespace KassaExpert.FonConnector.LibTest.CommandTests
             await _session.SignatureCreationUnitCommand.Register(new Lib.Command.Impl.SignatureCreationUnit.RegisterPayload(SignatureCreationUnitType.HSM_DIENSTLEISTER, TrustProvider.TEST, "12345678"));
             Assert.Pass();
         }
+
+        [Test]
+        public async Task TestCheck()
+        {
+            var result = await _session.SignatureCreationUnitCommand.Check(new Lib.Command.Impl.SignatureCreationUnit.CheckPayload("12345678"));
+            result.Payload.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task TestDecommission()
+        {
+            await _session.SignatureCreationUnitCommand.Decommission(new Lib.Command.Impl.SignatureCreationUnit.DecommissioningPayload(SignatureCreationUnitDecommissioningType.REV_ERROR, "12345678"));
+            Assert.Pass();
+        }
+
+        [Test]
+        public async Task TestRecommission()
+        {
+            await _session.SignatureCreationUnitCommand.Recommission(new Lib.Command.Impl.SignatureCreationUnit.RecommissioningPayload("12345678"));
+            Assert.Pass();
+        }
+
+        [Test]
+        public async Task TestDecommissionAbsolute()
+        {
+            await _session.SignatureCreationUnitCommand.Decommission(new Lib.Command.Impl.SignatureCreationUnit.DecommissioningPayload(SignatureCreationUnitDecommissioningType.INV_PLANNED, "12345678"));
+            Assert.Pass();
+        }
+
+        [Test]
+        public async Task TestFlow()
+        {
+            await _session.SignatureCreationUnitCommand.Register(new Lib.Command.Impl.SignatureCreationUnit.RegisterPayload(SignatureCreationUnitType.HSM_DIENSTLEISTER, TrustProvider.TEST, "12345678"));
+
+            var result1 = await _session.SignatureCreationUnitCommand.Check(new Lib.Command.Impl.SignatureCreationUnit.CheckPayload("12345678"));
+            result1.Payload.Should().BeTrue();
+
+            await _session.SignatureCreationUnitCommand.Decommission(new Lib.Command.Impl.SignatureCreationUnit.DecommissioningPayload(SignatureCreationUnitDecommissioningType.REV_ERROR, "12345678"));
+
+            //NOT WORKING, API ALWAYS RETURNS IN_BETRIEB
+            var result2 = await _session.SignatureCreationUnitCommand.Check(new Lib.Command.Impl.SignatureCreationUnit.CheckPayload("12345678"));
+            result2.Payload.Should().BeFalse();
+
+            await _session.SignatureCreationUnitCommand.Recommission(new Lib.Command.Impl.SignatureCreationUnit.RecommissioningPayload("12345678"));
+
+            var result3 = await _session.SignatureCreationUnitCommand.Check(new Lib.Command.Impl.SignatureCreationUnit.CheckPayload("12345678"));
+            result3.Payload.Should().BeTrue();
+
+            await _session.SignatureCreationUnitCommand.Decommission(new Lib.Command.Impl.SignatureCreationUnit.DecommissioningPayload(SignatureCreationUnitDecommissioningType.INV_PLANNED, "12345678"));
+
+            //NOT WORKING, API ALWAYS RETURNS IN_BETRIEB
+            var result4 = await _session.SignatureCreationUnitCommand.Check(new Lib.Command.Impl.SignatureCreationUnit.CheckPayload("12345678"));
+            result4.Payload.Should().BeFalse();
+        }
     }
 }

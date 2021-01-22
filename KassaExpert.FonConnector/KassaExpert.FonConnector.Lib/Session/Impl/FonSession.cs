@@ -60,9 +60,22 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
             _pin = pin;
 
             SignatureCreationUnitCommand = new Command.Impl.SignatureCreationUnit.CommandImpl(this);
+            CashRegisterCommand = new Command.Impl.CashRegister.CommandImpl(this);
         }
 
-        internal async Task<(CommandResult CommandResult, result Response)> ExecuteRkdbCommand(object command)
+        internal Task<(CommandResult CommandResult, result Response)> ExecuteRkdbCommand(object command)
+        {
+            var request = new rkdb
+            {
+                Items = new object[] { command },
+                paket_nr = RandomUtil.GetRandomNumberString(),
+                ts_erstellung = DateUtil.GetAustriaDateNow()
+            };
+
+            return ExecutePlainCommand(request);
+        }
+
+        internal async Task<(CommandResult CommandResult, result Response)> ExecutePlainCommand(object command)
         {
             var request = new rkdbRequest1
             {
@@ -73,12 +86,7 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
                     id = await GetSessionId(),
                     art_uebermittlung = _isTestSession ? art_uebermittlung.T : art_uebermittlung.P,
                     erzwinge_asynchron = false,
-                    Item = new rkdb
-                    {
-                        Items = new object[] { command },
-                        paket_nr = RandomUtil.GetRandomNumberString(),
-                        ts_erstellung = DateUtil.GetAustriaDateNow()
-                    }
+                    Item = command
                 }
             };
 
@@ -96,7 +104,8 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
             {
                 return (new CommandResult(false, status.ErrorMessage), response.rkdbResponse.result[0]);
             }
-            return (new CommandResult(false, status.ErrorMessage), response.rkdbResponse.result[0]);
+
+            return (new CommandResult(true, status.ErrorMessage), response.rkdbResponse.result[0]);
         }
 
         internal async Task Login()
@@ -160,6 +169,8 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
         }
 
         public ICommand<Command.Impl.SignatureCreationUnit.RegisterPayload, Command.Impl.SignatureCreationUnit.CheckPayload, Command.Impl.SignatureCreationUnit.DecommissioningPayload, Command.Impl.SignatureCreationUnit.RecommissioningPayload> SignatureCreationUnitCommand { get; }
+
+        public ICommand<Command.Impl.CashRegister.RegisterPayload, Command.Impl.CashRegister.CheckPayload, Command.Impl.CashRegister.DecommissioningPayload, Command.Impl.CashRegister.RecommissioningPayload> CashRegisterCommand { get; }
 
         #region IDisposable
 
