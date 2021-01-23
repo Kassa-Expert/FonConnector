@@ -38,12 +38,12 @@ namespace KassaExpert.FonConnector.LibTest.CommandTests
 
         public static string GenerateAes256Key()
         {
-            using (var aesAlg = new AesCryptoServiceProvider())
+            using (var aesKey = new AesManaged())
             {
-                aesAlg.Mode = CipherMode.CFB;
-                aesAlg.IV = new byte[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                aesAlg.GenerateKey();
-                return Convert.ToBase64String(aesAlg.Key);
+                aesKey.KeySize = 256;
+                aesKey.GenerateKey();
+
+                return Convert.ToBase64String(aesKey.Key);
             }
         }
 
