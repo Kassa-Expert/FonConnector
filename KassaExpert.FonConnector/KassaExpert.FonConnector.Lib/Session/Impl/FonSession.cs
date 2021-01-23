@@ -5,6 +5,7 @@ using KassaExpert.FonConnector.Lib.SessionService;
 using KassaExpert.FonConnector.Lib.Enum;
 using KassaExpert.FonConnector.Lib.Util;
 using KassaExpert.FonConnector.Lib.Exception;
+using KassaExpert.FonConnector.Lib.UidAbfrageService;
 using KassaExpert.FonConnector.Lib.RegKassaService;
 
 namespace KassaExpert.FonConnector.Lib.Session.Impl
@@ -171,6 +172,48 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
         public ICommand<Command.Impl.SignatureCreationUnit.RegisterPayload, Command.Impl.SignatureCreationUnit.CheckPayload, Command.Impl.SignatureCreationUnit.DecommissioningPayload, Command.Impl.SignatureCreationUnit.RecommissioningPayload> SignatureCreationUnitCommand { get; }
 
         public ICommand<Command.Impl.CashRegister.RegisterPayload, Command.Impl.CashRegister.CheckPayload, Command.Impl.CashRegister.DecommissioningPayload, Command.Impl.CashRegister.RecommissioningPayload> CashRegisterCommand { get; }
+
+        public async Task<CommandResult> CheckSignature(string maschinenlesbarerCode)
+        {
+            var beleghcheck = new belegpruefung();
+            beleghcheck.beleg = maschinenlesbarerCode;
+            beleghcheck.satznr = RandomUtil.GetRandomNumberString();
+
+            return (await ExecuteRkdbCommand(beleghcheck)).CommandResult;
+        }
+
+        public async Task<CommandResult> CheckUid(string uid)
+        {
+            if (!uid.IsValidUid())
+            {
+                return new CommandResult(false, "UID ist keine gültige ATU Nummer (muss ohne Leerzeichen sein)");
+            }
+
+            var request = new uidAbfrageServiceRequest
+            {
+                Body = new uidAbfrageServiceRequestBody
+                {
+                    tid = _teilnehmerId,
+                    benid = _benutzerId,
+                    id = await GetSessionId(),
+                    uid_tn = Environment.GetEnvironmentVariable("HERSTELLER_UID"),
+                    stufe = "1",
+                    uid = uid,
+                }
+            };
+
+            var clt = new uidAbfragePortClient();
+
+            await clt.OpenAsync();
+
+            var response = await clt.uidAbfrageAsync(request);
+
+            await clt.CloseAsync();
+
+            var status = FonUidAbfrageServiceReturnCodes.GetByFonReturnCode(response.Body.rc);
+
+            return new CommandResult(status.Success, status.ErrorMessage);
+        }
 
         #region IDisposable
 
