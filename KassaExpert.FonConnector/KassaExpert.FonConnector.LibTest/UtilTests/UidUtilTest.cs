@@ -12,13 +12,14 @@ namespace KassaExpert.FonConnector.LibTest.UtilTests
         [TestCase("Atu12345678")]
         [TestCase("ATU 12 345 678")]
         [TestCase("ATU12345678 ")]
+        [TestCase("ATU12345678")]
         public void TestInvalidUid(string invalidUid)
         {
             UidUtil.IsValidUid(invalidUid).Should().BeFalse();
         }
 
-        [TestCase("ATU12345678")]
         [TestCase("ATU73952234")]
+        [TestCase("ATU73519007")]
         public void TestValidUid(string validUid)
         {
             UidUtil.IsValidUid(validUid).Should().BeTrue();
