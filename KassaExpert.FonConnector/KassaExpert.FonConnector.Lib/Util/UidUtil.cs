@@ -21,26 +21,36 @@ namespace KassaExpert.FonConnector.Lib.Util
                 return false;
             }
 
-            if (!int.TryParse(uid[10].ToString(), out int lastDigit))
-            {
-                return false;
-            }
+            var lastDigit = int.Parse(uid[10].ToString());
 
             return lastDigit == CalcCheckSum(uid.Substring(3));
         }
 
-        private static int CalcCheckSum(string numberPart)
+        /// <summary>
+        /// https://www.bmf.gv.at/dam/jcr:9f9f8d5f-5496-4886-aa4f-81a4e39ba83e/BMF_UID_Konstruktionsregeln.pdf
+        /// </summary>
+        public static int CalcCheckSum(string numberPart)
         {
-            int sum = 0;
+            var s3 = calcS(3);
+            var s5 = calcS(5);
+            var s7 = calcS(7);
 
-            for (int i = 0; i < 7; i++)
+            var r = s3 + s5 + s7;
+
+            return (10 - ((r + c(2) + c(4) + c(6) + c(8) + 4) % 10)) % 10;
+
+            int c(int position)
             {
-                var gewicht = (i % 2) + 1;
-
-                sum += gewicht * int.Parse(numberPart[i].ToString());
+                var index = position - 2;
+                return int.Parse(numberPart[index].ToString());
             }
 
-            return (96 - sum) % 10;
+            int calcS(int position)
+            {
+                var ci = c(position);
+
+                return ((ci / 5) + (ci * 2) % 10);
+            }
         }
     }
 }

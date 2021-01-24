@@ -18,8 +18,9 @@ namespace KassaExpert.FonConnector.LibTest.UtilTests
             UidUtil.IsValidUid(invalidUid).Should().BeFalse();
         }
 
-        [TestCase("ATU73952234")]
-        [TestCase("ATU73519007")]
+        [TestCase("ATU73952234")] //meine
+        [TestCase("ATU73519007")] //marcl
+        [TestCase("ATU67104705")] //FIRMENABC
         public void TestValidUid(string validUid)
         {
             UidUtil.IsValidUid(validUid).Should().BeTrue();
