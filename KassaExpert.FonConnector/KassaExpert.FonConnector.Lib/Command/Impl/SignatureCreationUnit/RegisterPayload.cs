@@ -1,4 +1,5 @@
 ﻿using KassaExpert.FonConnector.Lib.Enum;
+using KassaExpert.Util.Lib.Enum;
 
 namespace KassaExpert.FonConnector.Lib.Command.Impl.SignatureCreationUnit
 {

@@ -1,6 +1,8 @@
 ﻿using KassaExpert.FonConnector.Lib.RegKassaService;
 using KassaExpert.FonConnector.Lib.Session.Impl;
 using KassaExpert.FonConnector.Lib.Util;
+using KassaExpert.Util.Lib.Date;
+using KassaExpert.Util.Lib.Validation;
 using System.Threading.Tasks;
 
 namespace KassaExpert.FonConnector.Lib.Command.Impl.CashRegister
@@ -8,6 +10,8 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.CashRegister
     internal sealed class CommandImpl : ICommand<RegisterPayload, CheckPayload, DecommissioningPayload, RecommissioningPayload>
     {
         private readonly FonSession _session;
+
+        private readonly IDate _dateUtil = IDate.GetInstance();
 
         internal CommandImpl(FonSession session)
         {
@@ -20,7 +24,7 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.CashRegister
 
             status.paket_nr = RandomUtil.GetRandomNumberString(9);
             status.satznr = RandomUtil.GetRandomNumberString(9);
-            status.ts_erstellung = DateUtil.GetAustriaDateNow();
+            status.ts_erstellung = _dateUtil.GetMezNow();
             status.kassenidentifikationsnummer = commandPayload.IdentificationNumber;
 
             var response = await _session.ExecutePlainCommand(status);
@@ -44,7 +48,7 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.CashRegister
             {
                 ausfall.Item = new ausfall
                 {
-                    beginn_ausfall = DateUtil.GetAustriaDateNow(),
+                    beginn_ausfall = _dateUtil.GetMezNow(),
                     begruendung = commandPayload.Type.Id
                 };
             }
@@ -65,7 +69,7 @@ namespace KassaExpert.FonConnector.Lib.Command.Impl.CashRegister
 
             wiederinbetriebnahme.satznr = RandomUtil.GetRandomNumberString();
             wiederinbetriebnahme.kassenidentifikationsnummer = commandPayload.IdentificationNumber;
-            wiederinbetriebnahme.ende_ausfall = DateUtil.GetAustriaDateNow();
+            wiederinbetriebnahme.ende_ausfall = _dateUtil.GetMezNow();
 
             return (await _session.ExecuteRkdbCommand(wiederinbetriebnahme)).CommandResult;
         }

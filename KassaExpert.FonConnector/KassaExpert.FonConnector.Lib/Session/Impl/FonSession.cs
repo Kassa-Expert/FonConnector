@@ -7,11 +7,16 @@ using KassaExpert.FonConnector.Lib.Util;
 using KassaExpert.FonConnector.Lib.Exception;
 using KassaExpert.FonConnector.Lib.UidAbfrageService;
 using KassaExpert.FonConnector.Lib.RegKassaService;
+using KassaExpert.Util.Lib.Date;
+using KassaExpert.Util.Lib.Validation;
 
 namespace KassaExpert.FonConnector.Lib.Session.Impl
 {
     public sealed class FonSession : ISession
     {
+        private readonly IDate _dateUtil = IDate.GetInstance();
+        private readonly IValidation _validationUtil = IValidation.GetInstance();
+
         /// <summary>
         /// When _sessionId is null → currenly no valid Session open → throw error to client error instead of calling without Session
         /// </summary>
@@ -70,7 +75,7 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
             {
                 Items = new object[] { command },
                 paket_nr = RandomUtil.GetRandomNumberString(),
-                ts_erstellung = DateUtil.GetAustriaDateNow()
+                ts_erstellung = _dateUtil.GetMezNow()
             };
 
             return ExecutePlainCommand(request);
@@ -184,9 +189,9 @@ namespace KassaExpert.FonConnector.Lib.Session.Impl
 
         public async Task<CommandResult> CheckUid(string uid)
         {
-            if (!uid.IsValidUid())
+            if (!_validationUtil.IsValidUid(uid))
             {
-                return new CommandResult(false, "UID ist keine gültige ATU Nummer (muss ohne Leerzeichen sein)");
+                return new CommandResult(false, "UID ist keine gültige ATU Nummer (muss ohne Leerzeichen sein, Prüfziffer wird überprüft)");
             }
 
             var request = new uidAbfrageServiceRequest

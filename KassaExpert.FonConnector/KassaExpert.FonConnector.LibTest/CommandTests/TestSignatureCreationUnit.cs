@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using KassaExpert.FonConnector.Lib.Enum;
 using KassaExpert.FonConnector.Lib.Session.Impl;
+using KassaExpert.Util.Lib.Enum;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
